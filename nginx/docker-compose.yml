@@ -10,9 +10,9 @@ services:
     networks:
       - my-networks
     deploy:
-      placement:
-        constraints:
-          - node.role == manager
+#      placement:
+#        constraints:
+#          - node.role == manager
       resources:
         limits:
           cpus: '0.50'
