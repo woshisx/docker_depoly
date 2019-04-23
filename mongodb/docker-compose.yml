@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    environment:
+      DB_HOST: mongo
+      DB_PASSWORD: 123456
+    volumes:
+      - mongodb_data: /var/lib/mongodb
+    networks:
+      - my-networks
+    deploy:
+      mode: replicated
+      replicas: 3
+volumes:
+  mongodb_data:
+
+networks:
+  my-networks:
+    driver: overlay
