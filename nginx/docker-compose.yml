@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   nginx:
-    build: myngixn
+    image: myngixn
     ports:
     - "8080:80"
     environment:
