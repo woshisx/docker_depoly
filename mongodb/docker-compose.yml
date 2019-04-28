@@ -6,14 +6,14 @@ services:
       DB_HOST: mongo
       DB_PASSWORD: 123456
     volumes:
-      - mongodb_data: /var/lib/mongodb
+      - "var/lib/mongodb:/var/lib/mongodb"
     networks:
       - my-networks
     deploy:
       mode: replicated
       replicas: 3
 volumes:
-  mongodb_data: /root/docker_deploy/mongodb/data
+  mongodb_data:
 
 networks:
   my-networks:
