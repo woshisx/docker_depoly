@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  nginx:
+    image: nginx
+    ports:
+    - "80:80"
+    environment:
+      app-url: www.mixwheel.top
+    networks:
+      - my-networks
+    deploy:
+#      placement:
+#        constraints:
+#          - node.role == manager
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+
+  mongodb:
+    image: mongo
+    environment:
+      DB_HOST: mongo
+      DB_PASSWORD: 123456
+    volumes:
+      - "/data/www.mixwheel.top/mongo/db:/data/www.mixwheel.top/mongo/db"
+    networks:
+      - my-networks
+    deploy:
+      mode: replicated
+      replicas: 3
+
+#  python:
+#    image: frolvlad/alpine-python3
+
+networks:
+  my-networks:
+    driver: overlay
