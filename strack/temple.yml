@@ -1,0 +1,70 @@
+version: "3"
+services:
+    mysql5.7:
+      image: mysql:5.7
+      ports:
+        - "33060"
+        - "3306:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+      networks:
+        - jgy
+      deploy:
+        placement:
+          constraints: [node.role == manager]
+
+  rabbitmq:
+    image: rabbitmq:managemen
+    environment:
+      RABBITMQ_DEFAULT_PASS: jgy
+    ports:
+      - "4369"
+      - "5671"
+      - "15671"
+      - "1883:1883"
+      - "5672:5672"
+      - "15672:15672"
+      - "25672:25672"
+      - "61613:61613"
+    networks:
+      - jgy
+    deploy:
+      replicas: 1
+
+  redis5:
+    image: redis
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "36379:6379"
+    networks:
+      - jgy
+    deploy:
+      replicas: 1
+
+  strack:
+    image: weijer/sd_docker:strack
+    ports:
+      - "18094:80"
+      - "18095:8080"
+      - "19101:9082"
+      - "19102:9083"
+      - "19103:9092"
+      - "19104:9093"
+    volumes:
+        - /mnt/hgfs/dev/weijer/strack:/usr/local/apache2/htdocs/app/public
+        - /mnt/hgfs/dev/weijer/service:/usr/local/apache2/htdocs/app/service
+    networks:
+      - jgy
+    depends_on:
+      - mysql5.7
+      - redis5
+      - rabbitmq
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  jgy:
+    driver: overlay
